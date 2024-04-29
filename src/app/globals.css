@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animation sur le survol de la carte */
+.card:hover {
+  color: rgb(1, 13, 185);
+  transition: color 1s;
+  
+}
+
+.card:hover .participant-name {
+  color: rgb(88, 250, 137); /* Couleur bleue au survol */
+  animation: fade-in .5s ease; /* Animation de fondu au survol */
+}
+
+
+.background-rouge {
+  background-color: rouge; /* Remplacez "rouge" par la couleur de fond rouge que vous souhaitez utiliser */
+}
+
+.player-item:hover {
+  background-color: #b000c0; /* Couleur de fond lorsque survolé */
+}
+
+/* Animation de fondu */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.card {
+  background: #fffffff7;
+  width: var(--card-width);
+  height: var(--card-height);
+  padding: 2px;
+  position: relative;
+  border-radius: 6px;
+  align-items: center;
+  text-align: center;
+  font-size: 1.5em;
+  color: rgba(255, 255, 255, 0.953);
+  font-family: cursive;
+}
+
+.card:hover:not(:hover) {
+  color: rgba(49, 19, 19, 0.953); /* Garde la couleur de la carte lorsqu'elle n'est pas survolée */
+}
+
+.card:not(:hover) .participant-name {
+  color: inherit; /* Garde la couleur de la carte lorsqu'elle n'est pas survolée */
+}
+
+.card:hover:not(:hover) .participant-name {
+  animation: none; /* Désactive l'animation lorsque la carte n'est pas survolée */
+}
+
+.card:hover:before,
+.card:hover:after {
+  animation: none;
+  opacity: 0;
+}
+
+.card::before {
+  content: "";
+  width: 104%;
+  height: 102%;
+  border-radius: 8px;
+  background-image: linear-gradient(
+    var(--rotate),
+    #ffffff,
+    #ffffff 43%,
+    #ffffff
+  );
+  position: absolute;
+  z-index: -1;
+  top: -1%;
+  left: -2%;
+  animation: spin 2.5s linear infinite;
+}
+
+.card::after {
+  position: absolute;
+  content: "";
+  top: calc(var(--card-height) / 6);
+  left: 0;
+  right: 0;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  transform: scale(0.8);
+  filter: blur(calc(var(--card-height) / 6));
+  background-image: linear-gradient(
+    var(--rotate),
+    #ffffff,
+    #ffffff 43%,
+    #ffffff
+  );
+  opacity: 1;
+  transition: opacity 0.5s;
+  animation: spin 2.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    --rotate: 0deg;
+  }
+  100% {
+    --rotate: 360deg;
+ 
+ 
+ 
+  }
+
+
+
+
+  
+}
+
+@keyframes changeColor {
+  0% {
+    background-color: #ccc; /* Initial color */
+  }
+  25% {
+    background-color: #f00; /* Change to red after 25% of the animation */
+  }
+  50% {
+    background-color: #0f0; /* Change to green after 50% of the animation */
+  }
+  75% {
+    background-color: #00f; /* Change to blue after 75% of the animation */
+  }
+  100% {
+    background-color: #ccc; /* Back to the initial color */
+  }
+}
+.child {
+  animation: changeColor 1s ease-in-out infinite;
+}
