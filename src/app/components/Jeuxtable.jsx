@@ -1,47 +1,68 @@
-import React, { useState } from "react";
-
-const Jeuxtable = ({ playersData, winner, animateColor, rollingAnimation }) => {
+"use client";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+const Jeuxtable = ({ playersData, winner, rollingAnimation }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-
+  const { winnerPlayer } = useContext(UserContext);
   const calculateAnimationDelay = (index, totalChildren) => {
     const animationDuration = 1;
     const delayIncrement = animationDuration / totalChildren;
     return `${index * delayIncrement}s`;
   };
 
-  // Filtrer les données des joueurs pour ne montrer que le gagnant
-  const filteredPlayersData = winner ? playersData.filter(player => player.firstName === winner.firstName && player.lastName === winner.lastName) : playersData;
-
+  console.log(playersData);
   return (
-    <div className={`flex w-full flex-col ${winner ? "winner-selected fade-in" : "fade-out"}`}>
-      <div className="w-full flex justify-center overflow-x-scroll lg:overflow-x-hidden">
-        <div className="w-full flex flex-col justify-between items-center p-2">
-          <div style={{ marginBottom: "100px" }}>
-            <span className={`participant-name ${winner ? "winner" : ""} ${winner ? "fade-in" : "fade-out"}`} style={{ fontSize: "4.2em" } }>
-              {winner ? `${winner.firstName} ${winner.lastName}` : "Participant Name"}
+    <div className="w-full flex justify-center ">
+      <div className="w-full flex flex-col justify-between items-center p-2">
+        <div className="w-full flex justify-center items-center">
+          <span className="text-center font-bold text-6xl text-[#2B77BB] mt-16">
+            Participant Name
+          </span>
+        </div>
+        <div className="flex flex-wrap w-full items-center justify-center p-4 gap-8 mt-16">
+          {playersData.map((tableData, index) => (
+            <div
+              key={index}
+              className={` flex justify-center flex-col items-center ${
+                rollingAnimation ? "child" : ""
+              } ${
+                tableData.winner ? "bg-green-400" : "bg-[#ccc]"
+              } p-2 rounded-xl w-25 h-25 `}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              style={{
+                animationDelay: calculateAnimationDelay(
+                  index,
+                  playersData.length
+                ),
+              }}
+            >
+              <span className="text-white font-medium text-3xl">
+                {tableData.firstName}
+              </span>
+              <span className="text-white font-medium text-3xl">
+                {tableData.lastName}
+              </span>
+            </div>
+          ))}
+        </div>
+        {winnerPlayer && (
+          <div className="w-full flex flex-col items-center justify-center gap-3">
+            <h1>The Winner</h1>
+ <div
+            className={` flex justify-center flex-col items-center bg-green-400 p-2 rounded-xl w-25 h-25 `}
+          >
+            <span className="text-white font-medium text-3xl">
+              {winnerPlayer.firstName}
+            </span>
+            <span className="text-white font-medium text-3xl">
+              {winnerPlayer.lastName}
             </span>
           </div>
-          <div className="w-full gap-3 grid grid-cols-10 card bg-red-500">
-            {filteredPlayersData.map((tableData, index) => (
-              <div
-                key={index}
-                className={`player-item ${rollingAnimation ? "child" : ""} p-2 rounded-xl bg-orange-500 ${index === hoveredIndex ? "hovered" : ""}`}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                style={{ animationDelay: calculateAnimationDelay(index, filteredPlayersData.length) }}
-              >
-                <div>
-                  <div>{tableData.firstName}</div>
-                  <div>{tableData.lastName}</div>
-                </div>
-              </div>
-            ))}
           </div>
-        </div>
+         
+        )}
       </div>
-      {winner && (
-        <div className={`text-green-500 text-center ${winner ? "fade-in" : "fade-out"}`}>{`${winner.firstName} ${winner.lastName}`} a gagné !</div>
-      )}
     </div>
   );
 };

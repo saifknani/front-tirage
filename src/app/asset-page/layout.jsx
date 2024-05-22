@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
 import Navbar from '../components/Navbar';
 import SideBar from '../components/SideBar';
 import { UserContextProvider } from '../context/UserContext';
@@ -7,8 +7,13 @@ import { UserContextProvider } from '../context/UserContext';
 //   title: 'Trussdid Dashboard',
 
 // }
+import { UserContext } from '../context/UserContext';
 
 export default function CredsLayout({ children }) {
+  const {fetchWinner}=useContext(UserContext)
+  useEffect(()=>{
+  fetchWinner()
+  },[])
   const [open, setOpen] = useState(false);
   return (
     <html lang="en">

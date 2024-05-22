@@ -25,10 +25,11 @@ const AssetsTable = ({ onPageChange, playersData, paginationInfo }) => {
     const sheet = "all_players"; // Nom de la feuille Excel
   
     // Créer une copie des données des joueurs pour l'exportation
-    const dataToExport = playersData.map(({ firstName, lastName, email, phoneNumber }) => ({
+    const dataToExport = playersData.map(({ firstName, lastName, email, phoneNumber,region }) => ({
       "Participant Name": `${firstName} ${lastName}`,
       "Participant email": email,
-      "phoneNumber": phoneNumber
+      "phoneNumber": phoneNumber,
+      "region": region,
     }));
   
     // Logique d'exportation vers Excel
@@ -61,21 +62,20 @@ const AssetsTable = ({ onPageChange, playersData, paginationInfo }) => {
 
       <button onClick={exportAllPlayers} className="w-28 m-auto rounded-xl bg-[#2B77BB] text-white p-2">Export All Players</button>
 
-      <div style={{ textAlign: "right" }}>
-  <li className="xn-search">
-    <form role="form" style={{ display: "inline-block" }}>
-      <span style={{ fontSize: "20px" }}>Recherche</span>
-      <input
-        onChange={inputHandler}
-        type="text"
-        name="search"
-        placeholder="........."
-        style={{ fontSize: "20px", marginLeft: "5px" }}
-      />
-      
-    </form>
-  </li>
-</div>
+     <div className="w-full flex items-center justify-end">
+     <div >   
+    <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+    <div className="relative">
+        <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+        </div>
+        <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50  " onChange={inputHandler} />
+        <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+    </div>
+    </div>
+     </div>
 
       <div className="flex flex-col">
         <div className="w-full overflow-x-scroll lg:overflow-x-hidden">
@@ -85,7 +85,7 @@ const AssetsTable = ({ onPageChange, playersData, paginationInfo }) => {
           >
             <thead className="w-full text-base text-[#2E75B5] font-extrabold bg-transparent">
               <tr className="w-full">
-                <th scope="col" className="md:px-6 px-2 py-2 md:py-3"></th>
+           
                 <th
                   scope="col"
                   className="md:px-6 px-2 py-2 md:py-3 text-xs md:text-xl "
@@ -108,22 +108,24 @@ const AssetsTable = ({ onPageChange, playersData, paginationInfo }) => {
                 >
                   <span className="text-xs md:text-xl">phoneNumber</span>
                 </th>
+                <th
+                  scope="col"
+                  className="md:px-6 px-2 py-2 md:py-3 text-xs md:text-xl "
+                >
+                  <span className="text-xs md:text-xl">region</span>
+                </th>
               </tr>
             </thead>
             <tbody>
               {dataPerPage.map((item, index) => (
                 <tr key={index} className="bg-white border-b hover:bg-gray-50 ">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-[#2B77BB] whitespace-nowrap "
-                  >
-                    {index}
-                  </th>
+              
                   <td className="px-6 py-4">
                     {item.firstName} {item.lastName}
                   </td>
                   <td className="px-6 py-4">{item.email}</td>
                   <td className="px-6 py-4">{item.phoneNumber}</td>
+                  <td className="px-6 py-4">{item.region}</td>
                 </tr>
               ))}
             </tbody>

@@ -14,13 +14,19 @@ const CreateNftModal = ({ open, setOpen }) => {
   });
 
   const addParticipant = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault(); // Empêcher la soumission par défaut du formulaire
     try {
-      const response = await addplayer({ ...assetData }); // Call the correct function
-      console.log("Participant added successfully", response.data);
+      // Validation du numéro de téléphone
+      if (assetData.phoneNumber.length !== 8) {
+        console.error("Le numéro de téléphone doit contenir exactement 8 chiffres.");
+        return; // Sortir de la fonction si la validation échoue
+      }
+  
+      const response = await addplayer({ ...assetData }); // Appeler la fonction correcte
+      console.log("Participant ajouté avec succès", response.data);
       handleClose();
     } catch (error) {
-      console.error("Error adding participant:", error);
+      console.error("Erreur lors de l'ajout du participant :", error);
     }
   };
 
@@ -28,8 +34,31 @@ const CreateNftModal = ({ open, setOpen }) => {
     setOpen(false);
   };
 
+
   const handleInputChange = (e, fieldName) => {
-    const { value } = e.target;
+    let { value } = e.target;
+
+    // Validation pour le champ 'firstName' et 'lastName' : accepter uniquement des lettres
+    if (fieldName === "firstName" || fieldName === "lastName") {
+      value = value.replace(/[^A-Za-z]/g, ''); // Remplacer tout sauf les lettres par une chaîne vide
+    }
+
+    // Validation pour le champ 'region' : accepter uniquement des lettres
+    if (fieldName === "region") {
+      value = value.replace(/[^A-Za-z]/g, ''); // Remplacer tout sauf les lettres par une chaîne vide
+    }
+
+    // Validation pour le champ 'phoneNumber' : 8 chiffres obligatoires
+    if (fieldName === "phoneNumber") {
+      value = value.replace(/\D/g, ''); // Supprimer tout sauf les chiffres
+
+      // Limiter la longueur à 8 chiffres
+      if (value.length !== 8) {
+
+        value = value.slice(0, 8);
+      }
+    }
+  
     setAssetData((prevData) => ({
       ...prevData,
       [fieldName]: value,
@@ -131,10 +160,28 @@ const CreateNftModal = ({ open, setOpen }) => {
                   value={assetData.phoneNumber}
                   onChange={(e) => handleInputChange(e, "phoneNumber")}
                   className="w-full border border-[#2E75B5] rounded-3xl p-2"
-                  type="text"
+                  type="Number"
                   placeholder="Number"
                 />
               </div>
+
+              
+            </div>
+            <div className="w-full flex flex-col items-start p-2 gap-4">
+              <span className="text-[20px] leading-[30px] text-black">
+                Region:
+              </span>
+              <div className="w-full flex justify-normal gap-6">
+                <input
+                  value={assetData.region}
+                  onChange={(e) => handleInputChange(e, "region")}
+                  className="w-full border border-[#2E75B5] rounded-3xl p-2"
+                  type="text"
+                  placeholder="region"
+                />
+              </div>
+
+              
             </div>
             <button
               type="submit"

@@ -1,41 +1,50 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Wallet from './smallComponents/Wallet';
 import NavbarIcons from './smallComponents/NavbarIcons';
 import Link from 'next/link';
-import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { Button, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { logoutUser } from '../api/auth';
 import { usePathname } from 'next/navigation';
 import { generateFromString } from 'generate-avatar';
+
 const Navbar = ({ open, setOpen }) => {
   const [role, setRole] = useState('');
   const location = usePathname();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { activeProfile, setUser } = useContext(UserContext);
 
   const openMenu = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const signOut = () => {
-    localStorage.clear();
 
-    handleClose();
-  };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const { activeProfile } = useContext(UserContext);
+  const signOut = async () => {
+    try {
+      await logoutUser();
+      setUser(null);
+
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+    handleClose();
+  };
 
   useEffect(() => {
     if (activeProfile) {
       setRole(activeProfile.role);
     }
   }, [activeProfile]);
+
   const userEmail = activeProfile?.email;
 
   return (
@@ -43,17 +52,13 @@ const Navbar = ({ open, setOpen }) => {
       <div className="w-full flex flex-1 items-center justify-between">
         <div className="flex justify-start gap-0">
           <div className="xl:hidden flex justify-center items-center">
-            <Button
-              onClick={() => setOpen((prev) => !prev)}
-              className="flex justify-center items-center p-0 "
-            >
+            <Button onClick={() => setOpen((prev) => !prev)} className="flex justify-center items-center p-0 ">
               <MenuIcon color="#2B77BB" />
             </Button>
           </div>
-            <h1 className="text-[#140E59] sm:text-2xl pl-3 text-base font-semibold sm:block hidden ">
-             Admin Dashboard
-            </h1>
-          
+          <h1 className="text-[#2B77BB] lg:text-4xl sm:text-2xl pl-3 text-base font-semibold sm:block hidden ">
+            Admin Dashboard
+          </h1>
         </div>
         <div className="sm:flex flex-col-reverse md:flex-row justify-around items-center  gap-4 md:gap-10 hidden">
           {/* <Wallet /> */}
@@ -70,9 +75,7 @@ const Navbar = ({ open, setOpen }) => {
             onClick={handleClick}
           >
             <img
-              src={`data:image/svg+xml;utf8,${generateFromString(
-                userEmail ? userEmail : 'mail@gmail.com'
-              )}`}
+              src={`data:image/svg+xml;utf8,${generateFromString(userEmail ? userEmail : 'mail@gmail.com')}`}
               className="w-10 h-10 rounded-full border-red-400 border"
             />
           </Button>
@@ -85,11 +88,7 @@ const Navbar = ({ open, setOpen }) => {
               'aria-labelledby': 'basic-button',
             }}
           >
-          
-            <MenuItem
-              className="flex justify-between w-full gap-5 text-red-500"
-              onClick={signOut}
-            >
+            <MenuItem className="flex justify-between w-full gap-5 text-red-500" onClick={signOut}>
               Logout <LogoutIcon fontSize="25" />
             </MenuItem>
           </Menu>

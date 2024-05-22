@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Animation sur le survol de la carte */
-.card:hover {
-  color: rgb(1, 13, 185);
-  transition: color 1s;
-  
-}
 
 .card:hover .participant-name {
   color: rgb(88, 250, 137); /* Couleur bleue au survol */
@@ -19,9 +13,7 @@
   background-color: rouge; /* Remplacez "rouge" par la couleur de fond rouge que vous souhaitez utiliser */
 }
 
-.player-item:hover {
-  background-color: #b000c0; /* Couleur de fond lorsque survolé */
-}
+
 
 /* Animation de fondu */
 @keyframes fade-in {
@@ -128,13 +120,13 @@
     background-color: #ccc; /* Initial color */
   }
   25% {
-    background-color: #f00; /* Change to red after 25% of the animation */
+    background-color: rgb(235, 229, 186); /* Change to red after 25% of the animation */
   }
   50% {
-    background-color: #0f0; /* Change to green after 50% of the animation */
+    background-color:rgb(128, 194, 255);  /* Change to green after 50% of the animation */
   }
   75% {
-    background-color: #00f; /* Change to blue after 75% of the animation */
+    background-color: rgb(128, 194, 255); /* Change to blue after 75% of the animation */
   }
   100% {
     background-color: #ccc; /* Back to the initial color */
@@ -142,4 +134,9 @@
 }
 .child {
   animation: changeColor 1s ease-in-out infinite;
+}
+
+
+.background{
+  background: radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%);
 }

@@ -1,20 +1,30 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import Jeuxtable from "../components/Jeuxtable";
 import { getRandomPlayer, getAllPlayers } from "../api/player";
 import CredsLayout from "../asset-page/layout";
+import { UserContext } from "../context/UserContext";
 
 function Page() {
   const [players, setPlayers] = useState([]);
   const [winner, setWinner] = useState(null);
   const [winnerSelected, setWinnerSelected] = useState(false);
-  const [animateColor, setAnimateColor] = useState(false);
+  const [disabled,setDisabled]=useState(false)
+  
   const [rollingAnimation, setRollingAnimation] = useState(false);
+//  useEffect(()=>{
 
+//  })
   useEffect(() => {
-    fetchPlayers();
+    const disableButton=()=>{
+      
+      if (winnerSelected){
+        setDisabled(true)
+      }
+    }
+    fetchPlayers();disableButton()
   }, []);
-
+ 
   const fetchPlayers = async () => {
     try {
       const response = await getAllPlayers();
@@ -23,6 +33,7 @@ function Page() {
       console.error("Error fetching assets:", error);
     }
   };
+const {winnerPlayer,setWinnerPlayer}=useContext(UserContext)
 
   const handleRandomPlayer = async () => {
     setRollingAnimation(true);
@@ -33,28 +44,34 @@ function Page() {
     }
     try {
       const response = await getRandomPlayer();
-      setWinner(response);
-      setWinnerSelected(true);
-      setAnimateColor(true);
+     if (response){
+      setWinnerSelected(true)
+      setWinnerPlayer(response)
+      setWinner(response)
+      fetchPlayers()
+      
       setTimeout(() => {
-        setAnimateColor(false);
+        
         setRollingAnimation(false);
       }, 2000);
+    }
     } catch (error) {
       console.error("Error fetching random player:", error);
     }
   };
 
+ 
+
   return (
     <CredsLayout>
-      <div className="flex flex-col gap-3 sm:p-6 p-3 w-full overflow-y-scroll">
-      {!winnerSelected && (
-  <button className="w-36 m-auto rounded-xl bg-[#2B77BB] text-white p-10" onClick={handleRandomPlayer}>
+      <div className="flex flex-col gap-3 sm:p-6 p-3 w-full overflow-y-scroll ">
+     
+  {!winnerPlayer&&<button disabled={disabled} className="w-52 rounded-xl bg-[#2B77BB] text-white text-center self-center p-8 text-4xl font-medium" onClick={handleRandomPlayer}>
     Tirage
-  </button>
-)}
+  </button>}
 
-        <Jeuxtable rollingAnimation={rollingAnimation} playersData={players} winner={winner} animateColor={animateColor} />
+
+        <Jeuxtable rollingAnimation={rollingAnimation} playersData={players} winner={winner} />
 
       </div>
     </CredsLayout>

@@ -75,4 +75,19 @@ export const getRandomPlayer = async () => {
   } catch (error) {
     throw error;
   }
+
+
 }
+  export const getWinner = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/player/winner`,  {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+
+  }
